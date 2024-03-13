@@ -25,7 +25,7 @@
 
 ## Demo
 
-Online demo: https://josetech.my.id:94
+Online demo: http://josetech.my.id:94
 
 To login website use:
 
