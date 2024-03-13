@@ -1,0 +1,88 @@
+@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+@import 'admin-lte/plugins/fontawesome-free/css/all.min.css';
+@import 'admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css';
+@import 'admin-lte/dist/css/adminlte.css';
+@import 'react-loading-skeleton/dist/skeleton.css';
+@import 'react-toastify/dist/ReactToastify.min.css';
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-header .navbar-nav .nav-item .nav-link {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.c-wrapper {
+  min-height: 784.667px !important;
+}
+
+.nav-sidebar .nav-treeview {
+  display: block;
+  opacity: 0;
+  max-height: 0;
+
+  transition: all 0.5s ease !important;
+}
+
+.nav-sidebar .menu-open > .nav-treeview {
+  opacity: 1;
+  max-height: 500px;
+}
+
+.nav-link svg.right,
+.nav-link i.right {
+    transition: all 0.3s ease !important;
+}
+
+.preloader {
+  transition: all 0.5s ease !important;
+}
+
+.preloader.hide {
+  /* opacity: 0;
+  height: 0; */
+  border-radius: 50%;
+  scale: 0;
+}
+
+.react-loading-skeleton {
+  --pseudo-element-display: block;
+}
+
+.centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.roundedBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: calc(35vw + 40px);
+  height: calc(35vw + 40px);
+  padding: 20px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.h1 {
+  font-size: 8em;
+  margin: 0;
+}
+.p {
+  font-size: 2em;
+  text-align: center;
+}
