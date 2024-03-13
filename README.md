@@ -25,7 +25,7 @@
 
 ## Demo
 
-Online demo: https://adminlte-react.erdkse.com
+Online demo: https://josetech.my.id:94
 
 To login website use:
 
