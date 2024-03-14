@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,7 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
   const initArrString: string[] = [];
   const [t] = useTranslation();
   const [indexExpanded, setIndexExpanded] = useState(initArr);
-  const [activeParent, setActiveParent] = useState(initArrString);
+  const [activeParent, setActiveParent] = useState(initArr);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,20 +45,22 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
     }
   };
 
-  useEffect(() => {    
+  useEffect(() => {
+    setActiveParent([]);
+    setIndexExpanded([]); 
     const getActiveParent = (dataMenu: IMenuItem[]) => {
-      dataMenu.forEach((menuItem: IMenuItem, i: number) => {
+      dataMenu.forEach((menuItem: IMenuItem) => {
         if(menuItem.children) {
-          menuItem.children.forEach((child: IMenuItem, j: number) => {
+          menuItem.children.forEach((child: IMenuItem) => {
             if(location.pathname === child.path) {
-              setActiveParent([menuItem.name]);
+              setActiveParent([menuItem.menuId]);
               setIndexExpanded([menuItem.menuId]);
             }
             if(child.children) {
-              child.children.forEach((subChild: IMenuItem, k: number) => {
+              child.children.forEach((subChild: IMenuItem) => {
                 if(location.pathname === subChild.path) {
                   // @ts-ignore
-                  setActiveParent([child.parent, child.name]);
+                  setActiveParent([child.parent, child.menuId]);
                   setIndexExpanded([menuItem.menuId, child.menuId]);
                 }
               });
@@ -77,7 +78,7 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
         <li key={i} className={`nav-item${indexExpanded.includes(menuItem.menuId) && menuItem.children ? ' menu-open' : ''}`}>
           <a
             className={`nav-link${
-              location.pathname === menuItem.path || (location.pathname != menuItem.path && indexExpanded.includes(menuItem.menuId) && activeParent.includes(menuItem.name) && menuItem.children) ? ' active' : ''
+              location.pathname === menuItem.path || (location.pathname != menuItem.path && indexExpanded.includes(menuItem.menuId) && activeParent.includes(menuItem.menuId) && menuItem.children) ? ' active' : ''
             }`}
             role="link"
             onClick={() => {handleMainMenuAction(menuItem)}}

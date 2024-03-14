@@ -124,27 +124,27 @@ app.get('/api/menu', cors(corsOptions), function (req, res) {
           name: 'menusidebar.label.subMenu',
           icon: 'fas fa-hammer nav-icon',
           path: '/sub-menu-1',
-          parent: 'menusidebar.label.mainMenu'
+          parent: 3
         },
         {
           menuId: 5,
           name: 'menusidebar.label.blank2',
           icon: 'fas fa-cogs nav-icon',
-          parent: 'menusidebar.label.mainMenu',
+          parent: 3,
           children: [
             {
               menuId: 6,
               name: 'menusidebar.label.subMenu',
               icon: 'fas fa-hammer nav-icon',
               path: '/sub-sub-menu-1',
-              parent: 'menusidebar.label.blank2',
+              parent: 5,
             },
             {
               menuId: 7,
               name: 'menusidebar.label.blank',
               icon: 'fas fa-cogs nav-icon',
               path: '/sub-sub-menu-2',
-              parent: 'menusidebar.label.blank2',
+              parent: 5,
             },
           ],
         },
@@ -160,21 +160,21 @@ app.get('/api/menu', cors(corsOptions), function (req, res) {
           name: 'menusidebar.label.subMenu',
           icon: 'fas fa-hammer nav-icon',
           path: '/sub-menus-5',
-          parent: 'menusidebar.label.subMenu2'
+          parent: 8
         },
         {
           menuId: 10,
           name: 'menusidebar.label.blank',
           icon: 'fas fa-cogs nav-icon',
           path: '/sub-menus-6',
-          parent: 'menusidebar.label.subMenu2'
+          parent: 8
         },
         {
           menuId: 11,
           name: 'menusidebar.label.blank',
           icon: 'fas fa-cogs nav-icon',
           path: '/sub-menus-7',
-          parent: 'menusidebar.label.subMenu2'
+          parent: 8
         },
       ],
     },
