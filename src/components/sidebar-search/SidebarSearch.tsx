@@ -77,18 +77,16 @@ export const SidebarSearch = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
     setIsDropdownOpen(false);
   };
 
-  const findMenuItems = (menu: any, results: any = []): any[] => {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const menuItem of menu) {
+  const findMenuItems = (menu: IMenuItem[], results: any = []): any[] => {
+    menu.forEach((menuItem: any) => {
       const name = t(menuItem.name);
-      
       if (name.toLowerCase().includes(searchText.toLowerCase()) && menuItem.path) {
         results.push(menuItem);
       }
       if (menuItem.children) {
         return findMenuItems(menuItem.children, results);
       }
-    }
+    });
     return results;
   };
 
@@ -152,7 +150,7 @@ export const SidebarSearch = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
                       __html: boldString(t(menuItem.name), searchText),
                     }}
                   />
-                  <div className="search-path">{t(menuItem.name)}</div>
+                  <div className="search-path">{t(menuItem.path)}</div>
                 </NavLink>
               ))}
           </div>
