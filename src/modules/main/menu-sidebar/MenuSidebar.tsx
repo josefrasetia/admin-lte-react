@@ -18,12 +18,6 @@ export interface IMenuItem {
   parent?: string;
 }
 
-export type testProps = {
-  string1: string,
-  string2: string,
-  string3: string,
-}
-
 const StyledBrandImage = styled(Image)`
   float: left;
   line-height: 0.8;

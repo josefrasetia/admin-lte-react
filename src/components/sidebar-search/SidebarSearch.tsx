@@ -1,6 +1,7 @@
 import { IMenuItem } from '@app/modules/main/menu-sidebar/MenuSidebar';
 import { Dropdown } from '@profabric/react-components';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -46,6 +47,7 @@ export const SidebarSearch = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
   const [foundMenuItems, setFoundMenuItems] = useState<any[]>([]);
   const dropdown = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [t] = useTranslation();
 
   useEffect(() => {
     setFoundMenuItems([]);
@@ -78,7 +80,9 @@ export const SidebarSearch = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
   const findMenuItems = (menu: any, results: any = []): any[] => {
     // eslint-disable-next-line no-restricted-syntax
     for (const menuItem of menu) {
-      if (menuItem.name.includes(searchText) && menuItem.path) {
+      const name = t(menuItem.name);
+      
+      if (name.toLowerCase().includes(searchText.toLowerCase()) && menuItem.path) {
         results.push(menuItem);
       }
       if (menuItem.children) {
@@ -145,10 +149,10 @@ export const SidebarSearch = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
                     className="search-title"
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                      __html: boldString(menuItem.name, searchText),
+                      __html: boldString(t(menuItem.name), searchText),
                     }}
                   />
-                  <div className="search-path">{menuItem.name}</div>
+                  <div className="search-path">{t(menuItem.name)}</div>
                 </NavLink>
               ))}
           </div>
