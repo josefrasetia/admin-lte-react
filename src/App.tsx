@@ -1,31 +1,29 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import Main from '@modules/main/Main';
-import Login from '@modules/login/Login';
-import Register from '@modules/register/Register';
-import ForgetPassword from '@modules/forgot-password/ForgotPassword';
-import RecoverPassword from '@modules/recover-password/RecoverPassword';
-import { useWindowSize } from '@app/hooks/useWindowSize';
-import { calculateWindowSize } from '@app/utils/helpers';
-import { useDispatch, useSelector } from 'react-redux';
-import { setWindowSize } from '@app/store/reducers/ui';
-import ReactGA from 'react-ga4';
+import { useEffect, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import Main from "@modules/main/Main";
+import Login from "@modules/login/Login";
+import Register from "@modules/register/Register";
+import ForgetPassword from "@modules/forgot-password/ForgotPassword";
+import RecoverPassword from "@modules/recover-password/RecoverPassword";
+import { useWindowSize } from "@app/hooks/useWindowSize";
+import { calculateWindowSize } from "@app/utils/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { setWindowSize } from "@app/store/reducers/ui";
+import ReactGA from "react-ga4";
 
-import Dashboard from '@pages/Dashboard';
-import Blank from '@pages/Blank';
-import SubMenu from '@pages/SubMenu';
-import Profile from '@pages/profile/Profile';
+import Dashboard from "@pages/Dashboard";
+import Blank from "@pages/Blank";
+import SubMenu from "@pages/SubMenu";
+import Profile from "@pages/profile/Profile";
 
-import PublicRoute from './routes/PublicRoute';
-import PrivateRoute from './routes/PrivateRoute';
-import { setAuthentication } from './store/reducers/auth';
-import {
-  getAuthStatus,
-} from './utils/oidc-providers';
-import { Image } from '@profabric/react-components';
-import NotFound from './pages/NotFound';
-import axios from 'axios';
+import PublicRoute from "./routes/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import { setAuthentication } from "./store/reducers/auth";
+import { getAuthStatus } from "./utils/oidc-providers";
+import { Image } from "@profabric/react-components";
+import NotFound from "./pages/NotFound";
+import axios from "axios";
 
 const { VITE_NODE_ENV } = import.meta.env;
 
@@ -33,7 +31,7 @@ export interface routesType {
   path: string;
   element: string;
   children?: routesType[];
-};
+}
 
 export interface elementTypes {
   [key: string]: JSX.Element;
@@ -65,9 +63,7 @@ const App = () => {
 
   const checkSession = async () => {
     try {
-      let responses: any = await Promise.all([
-        getAuthStatus(),
-      ]);
+      let responses: any = await Promise.all([getAuthStatus()]);
 
       responses = responses.filter((r: any) => Boolean(r));
 
@@ -75,7 +71,7 @@ const App = () => {
         dispatch(setAuthentication(responses[0]));
       }
     } catch (error: any) {
-      console.log('error', error);
+      console.log("error", error);
     }
     setIsAppLoading(false);
   };
@@ -92,35 +88,30 @@ const App = () => {
   }, [windowSize]);
 
   useEffect(() => {
-    if (location && location.pathname && VITE_NODE_ENV === 'production') {
+    if (location && location.pathname && VITE_NODE_ENV === "production") {
       ReactGA.send({
-        hitType: 'pageview',
+        hitType: "pageview",
         page: location.pathname,
       });
     }
   }, [location]);
 
   useEffect(() => {
-    axios.get('http://localhost:9002/api').then((response) => {
-      setDataRoute(response.data);
-    });
+    axios
+      .get("http://localhost:9002/api")
+      .then((response) => {
+        setDataRoute(response.data);
+      })
+      .catch((error) => {
+        toast.error("Failed to load routes, try again later.");
+      });
   }, []);
-
-  if (isAppLoading) {
-    return <div className="preloader flex-column justify-content-center align-items-center">
-    <Image
-      className="animation__shake"
-      src="/img/logo.png"
-      alt="AdminLTELogo"
-      height={60}
-      width={60}
-    />
-  </div>;
-  }
 
   return (
     <>
-      <div className={`preloader flex-column justify-content-center align-items-center ${(!isAppLoading && dataRoute.length > 0) ? 'hide' : ''}`}>
+      <div
+        className={`preloader flex-column justify-content-center align-items-center ${!isAppLoading && dataRoute.length > 0 ? "hide" : ""}`}
+      >
         <Image
           className="animation__shake"
           src="/img/logo.png"
@@ -129,6 +120,7 @@ const App = () => {
           width={60}
         />
       </div>
+      {!isAppLoading && dataRoute.length > 0 && (
       <Routes>
         {dataRoute.map((route: routesType, index: number) => {
           return (
@@ -137,39 +129,44 @@ const App = () => {
               path={route.path}
               element={elements[route.element]}
             >
-              {route.children && route.children.map((child: routesType, index: number) => {
-                if(!child.children) {               
+              {route.children &&
+                route.children.map((child: routesType, index: number) => {
+                  if (!child.children) {
+                    return (
+                      <Route
+                        key={index}
+                        path={child.path}
+                        element={elements[child.element]}
+                      />
+                    );
+                  }
                   return (
                     <Route
                       key={index}
                       path={child.path}
                       element={elements[child.element]}
-                    />
+                    >
+                      {child.children &&
+                        child.children.map(
+                          (subChild: routesType, index: number) => {
+                            return (
+                              <Route
+                                key={index}
+                                path={subChild.path}
+                                element={elements[subChild.element]}
+                              />
+                            );
+                          }
+                        )}
+                    </Route>
                   );
-                }
-                return (
-                  <Route
-                    key={index}
-                    path={child.path}
-                    element={elements[child.element]}
-                  >
-                    {child.children && child.children.map((subChild: routesType, index: number) => {
-                      return (
-                        <Route
-                          key={index}
-                          path={subChild.path}
-                          element={elements[subChild.element]}
-                        />
-                      );
-                    })}
-                  </Route>
-                );
-              })}
+                })}
             </Route>
           );
         })}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      )}
       <ToastContainer
         autoClose={3000}
         draggable={false}

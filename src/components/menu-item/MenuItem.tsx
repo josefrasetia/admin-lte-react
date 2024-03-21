@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { IMenuItem } from '@app/modules/main/menu-sidebar/MenuSidebar';
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { IMenuItem } from "@app/modules/main/menu-sidebar/MenuSidebar";
 
-const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
+const MenuItem = ({ dataMenu }: { dataMenu: IMenuItem[] }) => {
   const initArr: number[] = [];
-  const initArrString: string[] = [];
   const [t] = useTranslation();
   const [indexExpanded, setIndexExpanded] = useState(initArr);
   const [activeParent, setActiveParent] = useState(initArr);
@@ -14,9 +13,9 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
   const location = useLocation();
 
   const toggleMenu = (menuItem: IMenuItem) => {
-    if(!menuItem.parent) {
+    if (!menuItem.parent) {
       // menu item tidak ada parent
-      if(indexExpanded.includes(menuItem.menuId)) {
+      if (indexExpanded.includes(menuItem.menuId)) {
         setIndexExpanded(indexExpanded.filter((i) => i !== menuItem.menuId));
       } else {
         setIndexExpanded([...indexExpanded, menuItem.menuId]);
@@ -26,19 +25,18 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
       if (indexExpanded.includes(menuItem.menuId)) {
         setIndexExpanded(indexExpanded.filter((i) => i !== menuItem.menuId));
       } else {
-          setIndexExpanded([...indexExpanded, menuItem.menuId]);
+        setIndexExpanded([...indexExpanded, menuItem.menuId]);
       }
     }
-
   };
 
-  const handleMainMenuAction = (menuItem: IMenuItem) => {    
+  const handleMainMenuAction = (menuItem: IMenuItem) => {
     if (menuItem.children) {
       toggleMenu(menuItem);
       return;
     }
-    navigate(menuItem.path ? menuItem.path : '/');
-    
+    navigate(menuItem.path ? menuItem.path : "/");
+
     if (!menuItem.parent) {
       setIndexExpanded([]);
       setActiveParent([]);
@@ -47,18 +45,18 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
 
   useEffect(() => {
     setActiveParent([]);
-    setIndexExpanded([]); 
+    setIndexExpanded([]);
     const getActiveParent = (dataMenu: IMenuItem[]) => {
       dataMenu.forEach((menuItem: IMenuItem) => {
-        if(menuItem.children) {
+        if (menuItem.children) {
           menuItem.children.forEach((child: IMenuItem) => {
-            if(location.pathname === child.path) {
+            if (location.pathname === child.path) {
               setActiveParent([menuItem.menuId]);
               setIndexExpanded([menuItem.menuId]);
             }
-            if(child.children) {
+            if (child.children) {
               child.children.forEach((subChild: IMenuItem) => {
-                if(location.pathname === subChild.path) {
+                if (location.pathname === subChild.path) {
                   // @ts-ignore
                   setActiveParent([child.parent, child.menuId]);
                   setIndexExpanded([menuItem.menuId, child.menuId]);
@@ -68,38 +66,49 @@ const MenuItem = ({dataMenu}: {dataMenu: IMenuItem[]} ) => {
           });
         }
       });
-    }
+    };
     getActiveParent(dataMenu);
   }, [location]);
 
   const getMenu = (dataMenu: IMenuItem[]) => {
     return dataMenu.map((menuItem: IMenuItem, i: number) => {
       return (
-        <li key={i} className={`nav-item${indexExpanded.includes(menuItem.menuId) && menuItem.children ? ' menu-open' : ''}`}>
+        <li
+          key={i}
+          className={`nav-item${indexExpanded.includes(menuItem.menuId) && menuItem.children ? " menu-open" : ""}`}
+        >
           <a
             className={`nav-link${
-              location.pathname === menuItem.path || (location.pathname != menuItem.path && indexExpanded.includes(menuItem.menuId) && activeParent.includes(menuItem.menuId) && menuItem.children) ? ' active' : ''
+              location.pathname === menuItem.path ||
+              (location.pathname != menuItem.path &&
+                indexExpanded.includes(menuItem.menuId) &&
+                activeParent.includes(menuItem.menuId) &&
+                menuItem.children)
+                ? " active"
+                : ""
             }`}
             role="link"
-            onClick={() => {handleMainMenuAction(menuItem)}}
-            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              handleMainMenuAction(menuItem);
+            }}
+            style={{ cursor: "pointer" }}
           >
             <i className={`${menuItem.icon}`} />
             <p>{t(menuItem.name)}</p>
-            {menuItem.children ? <i className="right fas fa-angle-left" /> : null}
+            {menuItem.children ? (
+              <i className="right fas fa-angle-left" />
+            ) : null}
           </a>
 
           {menuItem.children && (
-            <ul className="nav nav-treeview">
-              {getMenu(menuItem.children)}
-            </ul>
+            <ul className="nav nav-treeview">{getMenu(menuItem.children)}</ul>
           )}
         </li>
-      )
+      );
     });
-  }
+  };
 
-  return <>{ getMenu(dataMenu)}</>;
+  return <>{getMenu(dataMenu)}</>;
 };
 
 export default MenuItem;

@@ -1,13 +1,13 @@
-
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { MenuItem } from '@components';
-import { Image } from '@profabric/react-components';
-import styled from 'styled-components';
-import { SidebarSearch } from '@app/components/sidebar-search/SidebarSearch';
-import Skeleton from 'react-loading-skeleton';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { MenuItem } from "@components";
+import { Image } from "@profabric/react-components";
+import styled from "styled-components";
+import { SidebarSearch } from "@app/components/sidebar-search/SidebarSearch";
+import Skeleton from "react-loading-skeleton";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export interface IMenuItem {
   menuId: number;
@@ -27,7 +27,6 @@ const StyledBrandImage = styled(Image)`
     0 6px 6px rgba(0, 0, 0, 0.23) !important;
 `;
 
-
 const StyledUserImage = styled(Image)`
   --pf-box-shadow: 0 3px 6px #00000029, 0 3px 6px #0000003b !important;
 `;
@@ -40,13 +39,21 @@ const MenuSidebar = () => {
   const [menu, setMenu] = useState<IMenuItem[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:9002/api/menu').then((response) => {
-      setMenu(response.data);
-    });
+    axios
+      .get("http://localhost:9002/api/menu")
+      .then((response) => {
+        setMenu(response.data);
+      })
+      .catch((error) => {
+        toast.error("Failed to load menu");
+      });
   }, []);
 
   return (
-    <aside className={`main-sidebar elevation-4 ${sidebarSkin}`} style={{position: 'fixed'}}>
+    <aside
+      className={`main-sidebar elevation-4 ${sidebarSkin}`}
+      style={{ position: "fixed" }}
+    >
       <Link to="/" className="brand-link bg-success">
         <StyledBrandImage
           src="/img/logo.png"
@@ -57,7 +64,7 @@ const MenuSidebar = () => {
         />
         <span className="brand-text font-weight-light">AdminLTE 3</span>
       </Link>
-      <div className="sidebar" >
+      <div className="sidebar">
         <div className="user-panel mt-3 pb-3 mb-3 d-flex">
           <div className="image">
             <StyledUserImage
@@ -80,14 +87,22 @@ const MenuSidebar = () => {
           <SidebarSearch dataMenu={menu} />
         </div>
 
-        <nav className="mt-2" style={{ overflowY: 'hidden' }}>
+        <nav className="mt-2" style={{ overflowY: "hidden" }}>
           <ul
             className={`nav nav-pills nav-sidebar flex-column${
-              menuItemFlat ? ' nav-flat' : ''
-            }${menuChildIndent ? ' nav-child-indent' : ''}`}
+              menuItemFlat ? " nav-flat" : ""
+            }${menuChildIndent ? " nav-child-indent" : ""}`}
             role="menu"
           >
-              {menu.length > 0 ? (<MenuItem dataMenu={menu} />) : (<Skeleton count={15} height={30} style={{marginBottom: '7px'}} />)}
+            {menu.length > 0 ? (
+              <MenuItem dataMenu={menu} />
+            ) : (
+              <Skeleton
+                count={15}
+                height={30}
+                style={{ marginBottom: "7px" }}
+              />
+            )}
           </ul>
         </nav>
       </div>
